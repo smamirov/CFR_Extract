@@ -2,6 +2,7 @@ import re
 from nltk.tokenize import TreebankWordTokenizer
 from collections import Counter
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS as sklearnStopWords
+import string
 
 # This functions strips all tags from the XML Document
 # and creates a text file without the tags.
@@ -18,15 +19,14 @@ def stripXMLTags(xmlFile, outputFile):
 def tokenizing(textFile, tokenSequenceOutput):
     with open(textFile, "r") as file1:
         doc = file1.read()
-
+    doc = doc.translate(str.maketrans('', '', string.punctuation))
     tokenizer = TreebankWordTokenizer()
     tokenSequence = tokenizer.tokenize(doc.lower())
-    punc = '''!()-[]{};:'"\, <>./?@#$%^&*_~'''
-
+    #punc = '''!()-[]{};:'"\, <>./?@#$%^&*_~'''
     with open(tokenSequenceOutput, 'w') as f:
         for line in tokenSequence:
-            if line not in punc:
-                f.write(f"{line}\n")
+            #if line not in punc:
+            f.write(f"{line}\n")
 
 # This functions gets the word frequency including stop words.
 # Writes the results to a text file.
@@ -58,9 +58,11 @@ def stopWords():
 
 # Uncomment the below lines to run 
 '''stripXMLTags("ECFR-title47.xml", "ECFR-output.txt")
+'''
+
 stopWords()
 tokenizing("ECFR-output.txt", "ECFR-tokenSeq.txt")
 termFrequencyWithStopWords("ECFR-tokenSeq.txt", "ECFR-termFreqStopWords.txt")
-termFrequencyWithoutStopWords("ECFR-tokenSeq.txt", "ECFR-termFreqNoStopWords.txt")'''
+termFrequencyWithoutStopWords("ECFR-tokenSeq.txt", "ECFR-termFreqNoStopWords.txt")
 
 
